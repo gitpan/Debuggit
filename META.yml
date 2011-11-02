@@ -4,15 +4,16 @@ author:
   - 'Buddy Burden'
 build_requires:
   B::Deparse: 0.89
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.36
   Test::Exception: 0.29
   Test::More: 0.88
   Test::Output: 0.16
   Test::Warn: 0.21
 configure_requires:
-  ExtUtils::MakeMaker: 6.42
+  ExtUtils::MakeMaker: 6.36
 distribution_type: module
-generated_by: 'Module::Install version 1.01'
+dynamic_config: 1
+generated_by: 'Module::Install version 1.04'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -23,5 +24,10 @@ no_index:
     - inc
     - t
 resources:
+  homepage: https://github.com/barefootcoder/debuggit/tree
   license: http://opensource.org/licenses/artistic-license.php
-version: 2.01
+  repository:
+    type: git
+    url: git://github.com/barefootcoder/debuggit.git
+    web: https://github.com/barefootcoder/debuggit/tree
+version: 2.01_01
