@@ -3,7 +3,7 @@ package Debuggit;
 use strict;
 use warnings;
 
-our $VERSION = '2.01_02';
+our $VERSION = '2.01_03';
 
 
 #################### main pod documentation begin ###################
@@ -199,32 +199,51 @@ sub import
 
     my $master_debug = eval "Debuggit::DEBUG();";
     my $debug_value = defined $opts{DEBUG} ? $opts{DEBUG} : defined $master_debug ? $master_debug : 0;
-    eval "sub Debuggit::DEBUG () { return $debug_value; }" unless defined $master_debug;
+    *Debuggit::DEBUG = sub () { $debug_value } unless defined $master_debug;
 
-    my $caller_defined = defined eval "${caller_package}::DEBUG();";
-    eval "sub ${caller_package}::DEBUG () { $debug_value }" unless $caller_defined;
+    no strict 'refs';
+    no warnings 'redefine';
 
-    if ($debug_value)
+    my $caller_value = eval "${caller_package}::DEBUG();";
+    if (defined $caller_value)
     {
-        my $d = $debuggit;
-        $d =~ s/debuggit/${caller_package}::debuggit/;
-        eval $d;
-
-        eval $add_func unless Debuggit->can('add_func');
-
-        # create default function
-        add_func(DUMP => 1, sub
-        {
-            require Data::Dumper;
-            shift;
-            return Data::Dumper::Dumper(shift);
-        });
+        warn("cannot redefine DEBUG; original value of $caller_value is used") if $debug_value ne $caller_value;
     }
     else
     {
-        eval "sub ${caller_package}::debuggit {}";
-        *add_func = sub {};
+        # Thanx to tye from perlmonks for this line of code, which solves the Pod::Coverage issue
+        # (see t/pod_coverage.t).               http://www.perlmonks.org/?node_id=951831
+        *{ join('::', $caller_package, 'DEBUG') } = sub () { $debug_value };
     }
+
+    if ($debug_value)
+    {
+        _setup_funcs();
+        *{ join('::', $caller_package, 'debuggit') } = \&debuggit;
+    }
+    else
+    {
+        *{ join('::', $caller_package, 'debuggit') } = sub {};
+        *Debuggit::add_func = sub {} unless Debuggit->can('add_func');
+    }
+}
+
+
+sub _setup_funcs
+{
+    my ($debug_value) = @_;
+
+    eval $debuggit unless Debuggit->can('debuggit');
+
+    eval $add_func unless Debuggit->can('add_func');
+
+    # create default function
+    add_func(DUMP => 1, sub
+    {
+        require Data::Dumper;
+        shift;
+        return Data::Dumper::Dumper(shift);
+    });
 }
 
 
@@ -272,7 +291,9 @@ BEGIN
     $debuggit = q{
         sub debuggit
         {
-            return unless @_ > 0 && ($_[0] =~ /^\d+$/ ? shift : 1) <= DEBUG;
+            no strict 'refs';
+            my $debug = join('::', scalar(caller), 'DEBUG');
+            return unless @_ > 0 && ($_[0] =~ /^\d+$/ ? shift : 1) <= $debug->();
             $Debuggit::output->($Debuggit::formatter->(Debuggit::_process_funcs(@_)));
         }
     };
@@ -722,6 +743,29 @@ That's easy too:
         Debuggit->import(PolicyModule => 1, DEBUG => 1);
     }
 
+
+
+=head1 DIAGNOSTICS
+
+=over 4
+
+=item * cannot redefine DEBUG; original value of %s is used
+
+It means you did something like this:
+
+    use Debuggit DEBUG => 2;
+    use Debuggit DEBUG => 3;
+
+only probably not nearly so obvious.  Debuggit tries to be very tolerant of multiple imports into
+the same package, but the C<DEBUG> symbol is a constant function and can't be redefined without
+engendering severe wonkiness, so Debuggit won't do it.  As long as you pass the same value for
+C<DEBUG>, that's okay.  But if the second (or more) value is different from the first, then you will
+get the original value regardless.  At least this way you'll be forewarned.
+
+=back
+
+
+
 =head1 STYLE
 
 This is a pretty simple module, but there are still a couple of different ways to do things.  Here
@@ -849,9 +893,8 @@ If you use this style:
 
 then, assuming DEBUG is set to 0 (or 1, even), it is indeed 100% free.  In fact, the test suite
 actually uses L<B::Deparse> to insure that the above statement produces no actual code when C<DEBUG
-== 0>, and if you happen to have L<GTop> installed (which I believe would mean that you would have
-to happen to be running under Linux), the test suite will also verify that C<use Debuggit> does not
-add anything to your program's memory footprint.
+== 0>, and if you happen to have L<GTop> or L<Memory::Usage> (or both) installed, the test suite
+will also verify that C<use Debuggit> does not add anything to your program's memory footprint.
 
 This style, however:
 

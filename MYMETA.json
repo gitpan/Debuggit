@@ -1,0 +1,50 @@
+{
+   "abstract" : "A fairly simplistic debug statement handler",
+   "author" : [
+      "Buddy Burden"
+   ],
+   "dynamic_config" : 0,
+   "generated_by" : "Module::Install version 1.04 using Module::Install::JSONMETA version 7.001, CPAN::Meta::Converter version 2.112150",
+   "license" : [
+      "artistic_1"
+   ],
+   "meta-spec" : {
+      "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
+      "version" : "2"
+   },
+   "name" : "Debuggit",
+   "no_index" : {
+      "directory" : [
+         "inc",
+         "t"
+      ]
+   },
+   "prereqs" : {
+      "build" : {
+         "requires" : {
+            "B::Deparse" : "0.89",
+            "ExtUtils::MakeMaker" : "6.36",
+            "Test::Exception" : "0.31",
+            "Test::More" : "0.88",
+            "Test::Output" : "0.16",
+            "Test::Warn" : "0.23"
+         }
+      },
+      "configure" : {
+         "requires" : {
+            "ExtUtils::MakeMaker" : "6.36"
+         }
+      },
+      "runtime" : {
+         "requires" : {}
+      }
+   },
+   "release_status" : "testing",
+   "resources" : {
+      "homepage" : "https://github.com/barefootcoder/debuggit/tree",
+      "license" : [
+         "http://opensource.org/licenses/artistic-license.php"
+      ]
+   },
+   "version" : "2.01_03"
+}

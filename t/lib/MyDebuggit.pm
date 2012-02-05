@@ -1,3 +1,4 @@
+# for use with t/policy.t
 package MyDebuggit;
 
 use Debuggit ();
@@ -7,8 +8,8 @@ $Debuggit::formatter = sub { return 'XX: ' . $cur_formatter->(@_) };
 
 sub import
 {
-	my $class = shift;
-	Debuggit->import(PolicyModule => 1, @_);
+    my $class = shift;
+    Debuggit->import(PolicyModule => 1, @_);
 }
 
 
