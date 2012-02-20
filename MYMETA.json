@@ -39,12 +39,12 @@
          "requires" : {}
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "homepage" : "https://github.com/barefootcoder/debuggit/tree",
       "license" : [
          "http://opensource.org/licenses/artistic-license.php"
       ]
    },
-   "version" : "2.01_08"
+   "version" : "2.02"
 }
