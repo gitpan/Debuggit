@@ -4,7 +4,7 @@
       "Buddy Burden"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Module::Install version 1.04 using Module::Install::JSONMETA version 7.001, CPAN::Meta::Converter version 2.112150",
+   "generated_by" : "Module::Install version 1.06 using Module::Install::JSONMETA version 7.001, CPAN::Meta::Converter version 2.120921",
    "license" : [
       "artistic_1"
    ],
@@ -46,5 +46,5 @@
          "http://opensource.org/licenses/artistic-license.php"
       ]
    },
-   "version" : "2.02"
+   "version" : "2.03"
 }
