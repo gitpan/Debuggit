@@ -3,7 +3,7 @@ package Debuggit;
 use strict;
 use warnings;
 
-our $VERSION = '2.03';
+our $VERSION = '2.03_01';
 
 
 #################### main pod documentation begin ###################
@@ -18,7 +18,7 @@ Debuggit - A fairly simplistic debug statement handler
 
 =head1 SYNOPSIS
 
-    use Debuggit(DEBUG => 1);
+    use Debuggit DEBUG => 1;
 
     # say you have a global hashref for your site configuration
     # (not to imply that global vars are good)
@@ -84,7 +84,7 @@ Later ...
     use strict;
     use warnings;
 
-    use Debuggit(DEBUG => 2);
+    use Debuggit DEBUG => 2;
 
 
     my $var = 6;
@@ -171,7 +171,7 @@ sub import
 
     if ($debug_value)
     {
-        _setup_funcs($master_debug, $debug_value, $caller_package);
+        _setup_funcs($master_debug, $debug_value, $caller_package, $opts{DataPrinter});
     }
     else
     {
@@ -183,7 +183,7 @@ sub import
 
 sub _setup_funcs
 {
-    my ($master_debug, $debug_value, $caller_package) = @_;
+    my ($master_debug, $debug_value, $caller_package, $data_printer) = @_;
 
     no strict 'refs';
     no warnings 'redefine';
@@ -209,12 +209,24 @@ sub _setup_funcs
     eval $add_func unless Debuggit->can('add_func');
 
     # create default function
-    add_func(DUMP => 1, sub
+    if ($data_printer)
     {
-        require Data::Dumper;
-        shift;
-        return Data::Dumper::Dumper(shift);
-    });
+        add_func(DUMP => 1, sub
+        {
+            require Data::Printer;
+            shift;
+            return Data::Printer::p(shift, colored => 1, hash_separator => ' => ', print_escapes => 1);
+        });
+    }
+    else
+    {
+        add_func(DUMP => 1, sub
+        {
+            require Data::Dumper;
+            shift;
+            return Data::Dumper::Dumper(shift);
+        });
+    }
 }
 
 
@@ -242,7 +254,7 @@ L<Debuggit::Manual/"The debuggit function">.
 =head2 default_formatter
 
 This is what C<debuggit> is set to initially.  You can call it directly if you want to "wrap"
-C<debuggit>.  For examples of this, see L<Debuggit::Cookbook/"Adding to the debugging output">.
+C<debuggit>.  For examples of this, see L<Debuggit::Cookbook/"Wrapping the debugging output">.
 
 =cut
 
@@ -391,12 +403,12 @@ get the original value regardless.  At least this way you'll be forewarned.
 
 Debuggit is designed to be left in your code, even when running in production environments.
 Because of this, it needs to disappear entirely when debugging is turned off.  It can achieve this
-unlikely goal because of the use of a compile-time constant.  Please see
+unlikely goal via the use of a compile-time constant.  Please see
 L<Debuggit::Manual/"Performance Considerations"> for full details.
 
 
 
-=head1 BUGS
+=head1 BUGS and CAVEATS
 
 =over
 
@@ -432,6 +444,33 @@ or this:
 Or, to look at it another way, you can pass a value as the first arg to print, or you can leave off
 a debugging level altogether, but don't try to do both at once.
 
+=item *
+
+Doing:
+
+    my $var1 = "DUMP";
+    my $var2 = "stuff";
+    debuggit(1 => "vars are", $var1, $var2);
+
+is equivalent to:
+
+    debuggit(1 => "vars are", DUMP => $var2);
+
+which is probably not going to do what you want, assuming the default functions are still in place.
+See L<Debuggit::Manual/"IMPORTANT CAVEAT!"> for full details.
+
+=item *
+
+Doing:
+
+    debuggit(2 => "first thousand elements:", @array[0..999]);
+
+is likely going to have a performance impact even when debugging is off.  Instead, do:
+
+    debuggit("first thousand elements:", @array[0..999]) if DEBUG >= 2;
+
+See L<Debuggit::Manual/"Style Considerations"> for another example and details on the problem.
+
 =back
 
 That's all I know of.  However, lacking omniscience, I welcome bug reports.
@@ -466,7 +505,7 @@ This program is free software licensed under
 The full text of the license can be found in the LICENSE file included with this module.
 
 
-This module is copyright (c) 2008-2012, Barefoot Software.  It has many venerable ancestors (some
+This module is copyright (c) 2008-2013, Barefoot Software.  It has many venerable ancestors (some
 more direct than others), including but not limited to:
 
 =over

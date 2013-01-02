@@ -20,7 +20,7 @@
    },
    "generated_by" : "Module::Install version 1.06 using Module::Install::JSONMETA version 7.001",
    "distribution_type" : "module",
-   "version" : "2.03",
+   "version" : "2.03_01",
    "name" : "Debuggit",
    "author" : [
       "Buddy Burden"
@@ -37,6 +37,7 @@
    },
    "abstract" : "A fairly simplistic debug statement handler",
    "configure_requires" : {
+      "YAML::Tiny" : 0,
       "ExtUtils::MakeMaker" : 6.36
    }
 }

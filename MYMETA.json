@@ -27,24 +27,26 @@
             "Test::Exception" : "0.31",
             "Test::More" : "0.88",
             "Test::Output" : "0.16",
-            "Test::Warn" : "0.23"
+            "Test::Warn" : "0.23",
+            "YAML::Tiny" : "0"
          }
       },
       "configure" : {
          "requires" : {
-            "ExtUtils::MakeMaker" : "6.36"
+            "ExtUtils::MakeMaker" : "6.36",
+            "YAML::Tiny" : "0"
          }
       },
       "runtime" : {
          "requires" : {}
       }
    },
-   "release_status" : "stable",
+   "release_status" : "testing",
    "resources" : {
       "homepage" : "https://github.com/barefootcoder/debuggit/tree",
       "license" : [
          "http://opensource.org/licenses/artistic-license.php"
       ]
    },
-   "version" : "2.03"
+   "version" : "2.03_01"
 }
