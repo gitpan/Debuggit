@@ -5,16 +5,16 @@ author:
 build_requires:
   B::Deparse: 0.89
   ExtUtils::MakeMaker: 6.36
+  IPC::System::Simple: 0.89
   Test::Exception: 0.31
   Test::More: 0.88
   Test::Output: 0.16
   Test::Warn: 0.23
   YAML::Tiny: 0
 configure_requires:
-  ExtUtils::MakeMaker: 6.36
-  YAML::Tiny: 0
+  ExtUtils::MakeMaker: 0
 dynamic_config: 0
-generated_by: 'Module::Install version 1.06 using Module::Install::JSONMETA version 7.001, CPAN::Meta::Converter version 2.120921'
+generated_by: 'ExtUtils::MakeMaker version 6.64, CPAN::Meta::Converter version 2.120921'
 license: artistic
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -22,10 +22,7 @@ meta-spec:
 name: Debuggit
 no_index:
   directory:
-    - inc
     - t
+    - inc
 requires: {}
-resources:
-  homepage: https://github.com/barefootcoder/debuggit/tree
-  license: http://opensource.org/licenses/artistic-license.php
-version: 2.03_01
+version: 2.03_02

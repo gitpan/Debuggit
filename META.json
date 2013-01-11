@@ -7,11 +7,7 @@
    },
    "resources" : {
       "homepage" : "https://github.com/barefootcoder/debuggit/tree",
-      "repository" : {
-         "web" : "https://github.com/barefootcoder/debuggit/tree",
-         "url" : "git://github.com/barefootcoder/debuggit.git",
-         "type" : "git"
-      },
+      "repository" : "git://github.com/barefootcoder/debuggit.git",
       "license" : "http://opensource.org/licenses/artistic-license.php"
    },
    "meta-spec" : {
@@ -20,7 +16,7 @@
    },
    "generated_by" : "Module::Install version 1.06 using Module::Install::JSONMETA version 7.001",
    "distribution_type" : "module",
-   "version" : "2.03_01",
+   "version" : "2.03_02",
    "name" : "Debuggit",
    "author" : [
       "Buddy Burden"
@@ -29,6 +25,7 @@
    "license" : "artistic",
    "build_requires" : {
       "Test::More" : "0.88",
+      "IPC::System::Simple" : "0.89",
       "Test::Exception" : "0.31",
       "Test::Warn" : "0.23",
       "B::Deparse" : "0.89",
