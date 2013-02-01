@@ -3,7 +3,7 @@ package Debuggit;
 use strict;
 use warnings;
 
-our $VERSION = '2.03_02';
+our $VERSION = '2.03_03';
 
 
 #################### main pod documentation begin ###################
@@ -48,6 +48,10 @@ Debuggit - A fairly simplistic debug statement handler
     my $var4 = { complex => 'hash', with => 'lots', of => 'stuff' };
     # this will call Data::Dumper::Dumper() for you
     # (even if you've never loaded Data::Dumper)
+    debuggit("var4 is", DUMP => $var4);
+
+    # or maybe you prefer Data::Printer instead?
+    use Debuggit DEBUG => 1, DataPrinter => 1;
     debuggit("var4 is", DUMP => $var4);
 
     # make your own function
@@ -206,26 +210,30 @@ sub _setup_funcs
         *{ join('::', $caller_package, 'debuggit') } = eval $debuggit;
     }
 
-    eval $add_func unless Debuggit->can('add_func');
+    unless (Debuggit->can('add_func'))
+    {
+        eval $add_func;
 
-    # create default function
-    if ($data_printer)
-    {
-        add_func(DUMP => 1, sub
+        # create default function
+        if ($data_printer)
         {
-            require Data::Printer;
-            shift;
-            return Data::Printer::p(shift, colored => 1, hash_separator => ' => ', print_escapes => 1);
-        });
-    }
-    else
-    {
-        add_func(DUMP => 1, sub
+            add_func(DUMP => 1, sub
+            {
+                require Data::Printer;
+                shift;
+                return &Data::Printer::p(shift, colored => 1, hash_separator => ' => ', print_escapes => 1);
+            });
+        }
+        else
         {
-            require Data::Dumper;
-            shift;
-            return Data::Dumper::Dumper(shift);
-        });
+            add_func(DUMP => 1, sub
+            {
+                require Data::Dumper;
+                shift;
+                local $Data::Dumper::Sortkeys = 1;
+                return Data::Dumper::Dumper(shift);
+            });
+        }
     }
 }
 
@@ -483,7 +491,7 @@ Debuggit is on GitHub at barefootcoder/debuggit.  Feel free to fork and submit p
 that I develop via TDD (Test-Driven Development), so a patch that includes a failing test is much
 more likely to get accepted (or least likely to get accepted more quickly).
 
-If you just want to report a problem or suggest a feature, that's okay too.  You can create an issue
+If you just want to report a problem or request a feature, that's okay too.  You can create an issue
 on GitHub, or a bug in CPAN's RT (at http://rt.cpan.org).  Or just send an email to
 bug-Debuggit@rt.cpan.org.
 

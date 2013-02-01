@@ -1,6 +1,9 @@
 use strict;
 use warnings;
 
+use lib 't/lib';
+use TestCmd;
+
 use Test::More      0.88                            ;
 use Test::Output    0.16    qw<:tests :functions>   ;
 use Test::Exception 0.31                            ;
@@ -31,7 +34,7 @@ my $cmd = <<'END';
 END
 
 # get dumped output without actually loading Data::Printer
-my $dump = `$^X -e '$cmd'`;
+my $dump = cmd_stdout({ perl => $cmd });
 # make sure we actually _got_ some output
 isnt $dump, '', "test dump returned some output";
 # and make sure we didn't actually load Data::Printer
@@ -40,6 +43,23 @@ throws_ok { print Data::Printer::p() } qr/^Undefined subroutine &Data::Printer::
 
 my $output = 'test is';
 stderr_is { debuggit(2 => $output, DUMP => $testhash); } "$output $dump\n", "got DUMP output";
+
+
+# if you call it twice for the same package, make sure the Data::Dumper version doesn't come back
+eval 'use Debuggit DEBUG => 2';
+stderr_is { debuggit(2 => $output, DUMP => $testhash); } "$output $dump\n", "still using Data::Printer after reimport";
+
+
+# make sure it still works even after loading Data::Printer directly
+$cmd = <<'END';
+    use strict;
+    use warnings;
+    use Data::Printer;
+    use Debuggit DEBUG => 2, DataPrinter => 1;
+
+    debuggit(2 => DUMP => { this => 'hash' });
+END
+cmd_stderr_unlike({ perl => $cmd }, qr/type.*must be one of.*not/i, "successfully circumvented prototype");
 
 
 done_testing;

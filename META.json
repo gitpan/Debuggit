@@ -16,7 +16,7 @@
    },
    "generated_by" : "Module::Install version 1.06 using Module::Install::JSONMETA version 7.001",
    "distribution_type" : "module",
-   "version" : "2.03_02",
+   "version" : "2.03_03",
    "name" : "Debuggit",
    "author" : [
       "Buddy Burden"
@@ -25,12 +25,12 @@
    "license" : "artistic",
    "build_requires" : {
       "Test::More" : "0.88",
-      "IPC::System::Simple" : "0.89",
       "Test::Exception" : "0.31",
       "Test::Warn" : "0.23",
       "B::Deparse" : "0.89",
       "ExtUtils::MakeMaker" : 6.36,
-      "Test::Output" : "0.16"
+      "Test::Output" : "0.16",
+      "Test::Command" : "0.08"
    },
    "abstract" : "A fairly simplistic debug statement handler",
    "configure_requires" : {

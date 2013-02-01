@@ -24,7 +24,7 @@
          "requires" : {
             "B::Deparse" : "0.89",
             "ExtUtils::MakeMaker" : "6.36",
-            "IPC::System::Simple" : "0.89",
+            "Test::Command" : "0.08",
             "Test::Exception" : "0.31",
             "Test::More" : "0.88",
             "Test::Output" : "0.16",
@@ -53,5 +53,5 @@
          "url" : "git://github.com/barefootcoder/debuggit.git"
       }
    },
-   "version" : "2.03_02"
+   "version" : "2.03_03"
 }
