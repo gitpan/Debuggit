@@ -5,6 +5,7 @@ author:
 build_requires:
   B::Deparse: 0.89
   ExtUtils::MakeMaker: 6.36
+  Monkey::Patch: 0.03
   Test::Command: 0.08
   Test::Exception: 0.31
   Test::More: 0.88
@@ -25,4 +26,4 @@ no_index:
     - t
     - inc
 requires: {}
-version: 2.03_03
+version: 2.03_04
