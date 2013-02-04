@@ -16,7 +16,7 @@
    },
    "generated_by" : "Module::Install version 1.06 using Module::Install::JSONMETA version 7.001",
    "distribution_type" : "module",
-   "version" : "2.03_04",
+   "version" : "2.03_05",
    "name" : "Debuggit",
    "author" : [
       "Buddy Burden"
